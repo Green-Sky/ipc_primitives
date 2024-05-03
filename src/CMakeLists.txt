@@ -10,9 +10,9 @@ add_library(shared_memory
 target_include_directories(shared_memory PUBLIC .)
 target_compile_features(shared_memory PUBLIC cxx_std_14)
 
-set(THREADS_PREFER_PTHREAD_FLAG ON)
-find_package(Threads REQUIRED)
-target_link_libraries(shared_memory Threads::Threads)
+#set(THREADS_PREFER_PTHREAD_FLAG ON)
+#find_package(Threads REQUIRED)
+#target_link_libraries(shared_memory Threads::Threads)
 
 if(UNIX AND NOT APPLE)
 	target_link_libraries(shared_memory rt)
@@ -20,3 +20,20 @@ endif()
 
 ########################################
 
+add_library(semaphore
+	./semaphore.hpp
+	./semaphore.cpp
+)
+
+target_include_directories(semaphore PUBLIC .)
+target_compile_features(semaphore PUBLIC cxx_std_14)
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+target_link_libraries(semaphore Threads::Threads)
+
+#if(UNIX AND NOT APPLE)
+	#target_link_libraries(shared_memory rt)
+#endif()
+
+########################################

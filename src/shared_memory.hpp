@@ -24,7 +24,7 @@ class SharedMemory final {
 
 	public:
 		// seperate open existing / create new
-		SharedMemory(const char* name_str, size_t size, bool create_new = false);
+		SharedMemory(const std::string& name, size_t size, bool create_new = false);
 
 		// non copyable
 		SharedMemory(const SharedMemory& other) = delete;
