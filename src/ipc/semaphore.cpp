@@ -47,7 +47,7 @@ bool Semaphore::isOpen(void) const {
 
 #else
 
-Semaphore::Semaphore(const std::string& name, bool create_new, uint32_t initial_value) : _owner(create_new), _name(name) {
+IPCSemaphore::IPCSemaphore(const std::string& name, bool create_new, uint32_t initial_value) : _owner(create_new), _name(name) {
 	if (create_new) {
 		_semaphore = sem_open(_name.c_str(), O_CREAT, 0700, initial_value);
 	} else {
@@ -59,26 +59,26 @@ Semaphore::Semaphore(const std::string& name, bool create_new, uint32_t initial_
 	}
 }
 
-Semaphore::~Semaphore(void) {
+IPCSemaphore::~IPCSemaphore(void) {
 	sem_close((sem_t*)_semaphore);
 	if (_owner) {
 		sem_unlink(_name.c_str());
 	}
 }
 
-void Semaphore::release(void) {
+void IPCSemaphore::release(void) {
 	sem_post((sem_t*)_semaphore);
 }
 
-void Semaphore::aquire(void) {
+void IPCSemaphore::aquire(void) {
 	sem_wait((sem_t*)_semaphore);
 }
 
-bool Semaphore::tryAquire(void) {
+bool IPCSemaphore::tryAquire(void) {
 	return sem_trywait((sem_t*)_semaphore) == 0;
 }
 
-bool Semaphore::isOpen(void) const {
+bool IPCSemaphore::isOpen(void) const {
 	return _semaphore != nullptr;
 }
 

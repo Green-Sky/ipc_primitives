@@ -4,8 +4,7 @@
 
 #include <string>
 
-
-class Semaphore {
+class IPCSemaphore {
 	bool _owner {false};
 	std::string _name;
 
@@ -18,8 +17,8 @@ class Semaphore {
 #endif
 
 	public:
-		Semaphore(const std::string& name, bool create_new = false, uint32_t initial_value = 0);
-		~Semaphore(void);
+		IPCSemaphore(const std::string& name, bool create_new = false, uint32_t initial_value = 0);
+		~IPCSemaphore(void);
 
 		void release(void);
 		void aquire(void);

@@ -72,7 +72,7 @@ SharedMemory::~SharedMemory(void) {
 
 // linux (maybe posix-ish)
 
-SharedMemory::SharedMemory(const std::string& name, size_t size, bool create_new) : _name(name), _size(size), _owner(create_new) {
+IPCSharedMemory::IPCSharedMemory(const std::string& name, size_t size, bool create_new) : _name(name), _size(size), _owner(create_new) {
 	if (create_new) {
 		// first delete existing shared memory with the same name
 		auto ret = shm_unlink(_name.c_str());
@@ -119,7 +119,7 @@ SharedMemory::SharedMemory(const std::string& name, size_t size, bool create_new
 	}
 }
 
-SharedMemory::~SharedMemory(void) {
+IPCSharedMemory::~IPCSharedMemory(void) {
 	if (_data != nullptr) {
 		munmap(_data, _size);
 		close(_fd);

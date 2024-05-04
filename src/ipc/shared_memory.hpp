@@ -8,7 +8,7 @@
 #include <cstdint>
 #include <string>
 
-class SharedMemory final {
+class IPCSharedMemory final {
 	std::string _name;
 	std::size_t _size {0};
 	std::uint8_t* _data {nullptr};
@@ -24,14 +24,14 @@ class SharedMemory final {
 
 	public:
 		// seperate open existing / create new
-		SharedMemory(const std::string& name, size_t size, bool create_new = false);
+		IPCSharedMemory(const std::string& name, size_t size, bool create_new = false);
 
 		// non copyable
-		SharedMemory(const SharedMemory& other) = delete;
+		IPCSharedMemory(const IPCSharedMemory& other) = delete;
 		// moveable
-		SharedMemory(SharedMemory&& other) = default;
+		IPCSharedMemory(IPCSharedMemory&& other) = default;
 
-		~SharedMemory(void);
+		~IPCSharedMemory(void);
 
 		// clone (for non creating objects, which just opens it again)
 
