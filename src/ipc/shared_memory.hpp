@@ -24,12 +24,14 @@ class IPCSharedMemory final {
 
 	public:
 		// seperate open existing / create new
-		IPCSharedMemory(const std::string& name, size_t size, bool create_new = false);
+		explicit IPCSharedMemory(const std::string& name, size_t size, bool create_new = false);
 
 		// non copyable
 		IPCSharedMemory(const IPCSharedMemory& other) = delete;
+		IPCSharedMemory& operator=(const IPCSharedMemory& other) = delete;
 		// moveable
 		IPCSharedMemory(IPCSharedMemory&& other) = default;
+		IPCSharedMemory& operator=(IPCSharedMemory&& other) = default;
 
 		~IPCSharedMemory(void);
 

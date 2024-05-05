@@ -4,6 +4,9 @@
 
 #include <string>
 
+// TODO: native_handle?
+// TODO: docs
+
 class IPCSemaphore {
 	bool _owner {false};
 	std::string _name;
@@ -27,4 +30,9 @@ class IPCSemaphore {
 		bool isOpen(void) const;
 
 		const std::string& name(void) const { return _name; }
+
+	public: // stl like mutex interface
+		void lock(void) { aquire(); }
+		bool try_lock(void) { return tryAquire(); }
+		void unlock(void) { release(); }
 };

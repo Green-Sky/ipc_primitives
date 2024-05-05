@@ -8,7 +8,7 @@ add_library(ipc_shared_memory
 )
 
 target_include_directories(ipc_shared_memory PUBLIC .)
-target_compile_features(ipc_shared_memory PUBLIC cxx_std_14)
+target_compile_features(ipc_shared_memory PUBLIC cxx_std_17)
 
 #set(THREADS_PREFER_PTHREAD_FLAG ON)
 #find_package(Threads REQUIRED)
@@ -26,7 +26,7 @@ add_library(ipc_semaphore
 )
 
 target_include_directories(ipc_semaphore PUBLIC .)
-target_compile_features(ipc_semaphore PUBLIC cxx_std_14)
+target_compile_features(ipc_semaphore PUBLIC cxx_std_17)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
@@ -38,3 +38,13 @@ target_link_libraries(ipc_semaphore Threads::Threads)
 
 ########################################
 
+add_library(ipc_spscqueue INTERFACE
+	./ipc/spsc_queue.hpp
+)
+
+target_include_directories(ipc_spscqueue INTERFACE .)
+target_compile_features(ipc_spscqueue INTERFACE cxx_std_17)
+
+target_link_libraries(ipc_spscqueue INTERFACE ipc_semaphore ipc_shared_memory)
+
+########################################
