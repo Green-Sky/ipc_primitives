@@ -29,7 +29,7 @@ class IPCSPSCQueue {
 	size_t _capacity {0};
 
 	// technically its "next" write index
-	size_t* getWriteIndex(void) {
+	size_t* getWriteIndex(void) const {
 		if (_capacity == 0 || _shared_memory.data() == nullptr) {
 			return nullptr;
 		}
@@ -40,7 +40,7 @@ class IPCSPSCQueue {
 		return reinterpret_cast<size_t*>(tail_start);
 	}
 
-	size_t* getReadIndex(void) {
+	size_t* getReadIndex(void) const {
 		if (_capacity == 0 || _shared_memory.data() == nullptr) {
 			return nullptr;
 		}
@@ -127,7 +127,7 @@ class IPCSPSCQueue {
 				return nullptr; // nothing to pop !!
 			}
 
-			auto* data_array = reinterpret_cast<T*>(_shared_memory.data());
+			T* data_array = reinterpret_cast<T*>(_shared_memory.data());
 			return data_array + read_index;
 		}
 
@@ -162,7 +162,7 @@ class IPCSPSCQueue {
 			}
 		}
 
-		void push(const T& value) {
+		bool try_push(const T& value) {
 			// first copy the values
 			size_t write_index {0};
 			size_t read_index {0};
@@ -176,22 +176,23 @@ class IPCSPSCQueue {
 
 			// if full
 			if ((write_index+1)%_capacity == read_index) {
-				return; // no space
+				return false; // no space
 			}
 
 			{ // add element
 				std::lock_guard lg {_sem_writer_index};
+
+				auto* data_array = reinterpret_cast<T*>(_shared_memory.data());
+				new(data_array+write_index) T(value); // placement new
 
 				write_index += 1;
 				if (write_index == _capacity) {
 					write_index = 0;
 				}
 
-				auto* data_array = reinterpret_cast<T*>(_shared_memory.data());
-				new(data_array+write_index) T(value); // placement new
-
 				*getWriteIndex() = write_index;
 			}
+			return true;
 		}
 
 		size_t size(void) const {
@@ -215,9 +216,9 @@ class IPCSPSCQueue {
 
 			// wrap around situation
 			// TODO: make more elegant
-			if (write_index < read_index) {
+			// else if (write_index < read_index) {
 				return (write_index + _capacity) - read_index;
-			}
+			//}
 		}
 
 		// empty
@@ -227,7 +228,7 @@ class IPCSPSCQueue {
 		}
 
 		// return the minimum size a shared memory needs to have
-		static size_t neededSharedSize(const size_t capacity) {
+		static constexpr size_t neededSharedSize(const size_t capacity) {
 			// items + trailing begin and end of circular buffer
 			// TODO: cache line spacing
 			return capacity * sizeof(T) + 2 * sizeof(size_t);
