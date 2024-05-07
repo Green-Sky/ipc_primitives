@@ -19,7 +19,7 @@
 
 // windows
 
-SharedMemory::SharedMemory(const std::string& name, size_t size, bool create_new) : _name(name), _size(size), _owner(create_new) {
+IPCSharedMemory::IPCSharedMemory(const std::string& name, size_t size, bool create_new) : _name(name), _size(size), _owner(create_new) {
 	if (create_new) {
 		_handle = CreateFileMappingA(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, _size, _name.c_str());
 
@@ -60,7 +60,7 @@ SharedMemory::SharedMemory(const std::string& name, size_t size, bool create_new
 	}
 }
 
-SharedMemory::~SharedMemory(void) {
+IPCSharedMemory::~IPCSharedMemory(void) {
 	if (_data != nullptr) {
 		UnmapViewOfFile(_data);
 		_data = nullptr;

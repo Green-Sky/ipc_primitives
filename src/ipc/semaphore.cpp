@@ -12,7 +12,7 @@
 
 #if defined(_WIN32)
 
-Semaphore::Semaphore(const std::string& name, bool create_new, uint32_t initial_value) : _owner(create_new), _name(name) {
+IPCSemaphore::IPCSemaphore(const std::string& name, bool create_new, uint32_t initial_value) : _owner(create_new), _name(name) {
 	if (create_new) {
 		_handle = CreateSemaphoreA(nullptr, initial_value, 0x7fffffff, _name.c_str());
 	} else {
@@ -24,24 +24,24 @@ Semaphore::Semaphore(const std::string& name, bool create_new, uint32_t initial_
 	}
 }
 
-Semaphore::~Semaphore(void) {
+IPCSemaphore::~IPCSemaphore(void) {
 	// nothing special for owner
 	CloseHandle(_handle);
 }
 
-void Semaphore::release(void) {
+void IPCSemaphore::release(void) {
 	ReleaseSemaphore(_handle, 1, nullptr);
 }
 
-void Semaphore::aquire(void) {
+void IPCSemaphore::aquire(void) {
 	WaitForSingleObject(_handle, INFINITE);
 }
 
-bool Semaphore::tryAquire(void) {
+bool IPCSemaphore::tryAquire(void) {
 	return WaitForSingleObject(_handle, 0) == WAIT_OBJECT_0;
 }
 
-bool Semaphore::isOpen(void) const {
+bool IPCSemaphore::isOpen(void) const {
 	return _handle != 0;
 }
 
