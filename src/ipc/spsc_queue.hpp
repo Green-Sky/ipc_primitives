@@ -133,19 +133,21 @@ class IPCSPSCQueue {
 
 		void pop(void) {
 			// first copy the values
-			size_t write_index {0};
 			size_t read_index {0};
-			{
-				// TODO: do we need the multi lock? probably not?
-				std::scoped_lock sl {_sem_writer_index, _sem_reader_index};
-				write_index = *getWriteIndex();
-				read_index = *getReadIndex();
-				// we do this so the writer lock is released here
-			}
+			{ // explicit smaller scope for write_index
+				size_t write_index {0};
+				{
+					// TODO: do we need the multi lock? probably not?
+					std::scoped_lock sl {_sem_writer_index, _sem_reader_index};
+					write_index = *getWriteIndex();
+					read_index = *getReadIndex();
+					// we do this so the writer lock is released here
+				}
 
-			// if empty
-			if (write_index == read_index) {
-				return; // nothing to pop !!
+				// if empty
+				if (write_index == read_index) {
+					return; // nothing to pop !!
+				}
 			}
 
 			{ // remove element
@@ -165,18 +167,20 @@ class IPCSPSCQueue {
 		bool try_push(const T& value) {
 			// first copy the values
 			size_t write_index {0};
-			size_t read_index {0};
-			{
-				// TODO: do we need the multi lock?
-				std::scoped_lock sl {_sem_writer_index, _sem_reader_index};
-				write_index = *getWriteIndex();
-				read_index = *getReadIndex();
-				// we do this so the reader lock is released here
-			}
+			{ // explicitly smaller scope for read_index
+				size_t read_index {0};
+				{
+					// TODO: do we need the multi lock?
+					std::scoped_lock sl {_sem_writer_index, _sem_reader_index};
+					write_index = *getWriteIndex();
+					read_index = *getReadIndex();
+					// we do this so the reader lock is released here
+				}
 
-			// if full
-			if ((write_index+1)%_capacity == read_index) {
-				return false; // no space
+				// if full
+				if ((write_index+1)%_capacity == read_index) {
+					return false; // no space
+				}
 			}
 
 			{ // add element
@@ -234,3 +238,4 @@ class IPCSPSCQueue {
 			return capacity * sizeof(T) + 2 * sizeof(size_t);
 		}
 };
+
