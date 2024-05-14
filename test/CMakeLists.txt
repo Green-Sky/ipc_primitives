@@ -12,23 +12,23 @@ add_test(NAME shared_memory_test1 COMMAND shared_memory_test1)
 
 ########################################
 
-add_executable(test_queue1
-	./test_queue1.cpp
-)
-target_compile_features(test_queue1 PUBLIC cxx_std_17)
-target_link_libraries(test_queue1 PRIVATE ipc_spscqueue)
+#add_executable(test_queue1
+#    ./test_queue1.cpp
+#)
+#target_compile_features(test_queue1 PUBLIC cxx_std_17)
+#target_link_libraries(test_queue1 PRIVATE ipc_spscqueue)
 
-add_test(NAME test_queue1 COMMAND test_queue1)
+#add_test(NAME test_queue1 COMMAND test_queue1)
 
-########################################
+#########################################
 
-add_executable(test_queue2
-	./test_queue2.cpp
-)
-target_compile_features(test_queue2 PUBLIC cxx_std_17)
-target_link_libraries(test_queue2 PRIVATE ipc_spscqueue)
+#add_executable(test_queue2
+#    ./test_queue2.cpp
+#)
+#target_compile_features(test_queue2 PUBLIC cxx_std_17)
+#target_link_libraries(test_queue2 PRIVATE ipc_spscqueue)
 
-add_test(NAME test_queue2 COMMAND test_queue2)
+#add_test(NAME test_queue2 COMMAND test_queue2)
 
-########################################
+#########################################
 

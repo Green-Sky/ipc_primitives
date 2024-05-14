@@ -20,31 +20,13 @@ endif()
 
 ########################################
 
-add_library(ipc_semaphore
-	./ipc/semaphore.hpp
-	./ipc/semaphore.cpp
-)
+#add_library(ipc_spscqueue INTERFACE
+#    ./ipc/spsc_queue.hpp
+#)
 
-target_include_directories(ipc_semaphore PUBLIC .)
-target_compile_features(ipc_semaphore PUBLIC cxx_std_17)
+#target_include_directories(ipc_spscqueue INTERFACE .)
+#target_compile_features(ipc_spscqueue INTERFACE cxx_std_17)
 
-set(THREADS_PREFER_PTHREAD_FLAG ON)
-find_package(Threads REQUIRED)
-target_link_libraries(ipc_semaphore Threads::Threads)
+#target_link_libraries(ipc_spscqueue INTERFACE ipc_semaphore ipc_shared_memory)
 
-#if(UNIX AND NOT APPLE)
-	#target_link_libraries(ipc_shared_memory rt)
-#endif()
-
-########################################
-
-add_library(ipc_spscqueue INTERFACE
-	./ipc/spsc_queue.hpp
-)
-
-target_include_directories(ipc_spscqueue INTERFACE .)
-target_compile_features(ipc_spscqueue INTERFACE cxx_std_17)
-
-target_link_libraries(ipc_spscqueue INTERFACE ipc_semaphore ipc_shared_memory)
-
-########################################
+#########################################
